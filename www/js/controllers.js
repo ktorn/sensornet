@@ -7,13 +7,7 @@ angular.module('starter.controllers', [])
     // var posOptions = {timeout: 10000, enableHighAccuracy: false};
     var ref = new Firebase("https://sensornet.firebaseio.com/");
     var location = ref.child("loc")
-    var userRef = location.child("test");
-
-    var watchOptions = {
-      timeout: 3000,
-      maximumAge: 1000,
-      enableHighAccuracy: false // may cause errors if true
-    };
+    var userRef = location.child("filipe");
     $scope.enableOpenData = false;
     $scope.toggleOpenData = function () {
       if($scope.enableOpenData)
@@ -26,7 +20,6 @@ angular.module('starter.controllers', [])
 
       }
       $scope.enableOpenData = !$scope.enableOpenData;
-      var prefs = userRef.child("preferences");
       var time = new Date().getTime();
       var userTime = userRef.child(time);
       userTime.set({openData: $scope.enableOpenData});
@@ -54,7 +47,7 @@ angular.module('starter.controllers', [])
           $scope.location = {lat: lat, lon: lon, altitude:altitude, speed:speed};
           $scope.$apply();
           $cordovaToast.show("Location saved", "short", "center");
-          console.log('[js] BackgroundGeoLocation callback:  ' + position.latitude + ',' + position.longitude + " speed:" + position.speed);
+          console.log('[js] BackgroundGeoLocation callback:  ' + "lat: "+position.latitude + ' long:' + position.longitude + " speed:" + position.speed);
 
           // Do your HTTP request here to POST location to your server.
           // jQuery.post(url, JSON.stringify(location));
@@ -76,9 +69,11 @@ angular.module('starter.controllers', [])
         // BackgroundGeoLocation is highly configurable. See platform specific configuration options
         backgroundGeoLocation.configure(callbackFn, failureFn, {
           desiredAccuracy: 10,
-          stationaryRadius: 1,
+          locationTimeout:1,
+          stationaryRadius: 0,
           distanceFilter: 1,
-          maximumAge: 2000, timeout: 2000, enableHighAccuracy: true,
+          interval:1,
+          maximumAge: 1000, timeout: 1000, enableHighAccuracy: true,
           debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
           stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates
         });
