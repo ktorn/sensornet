@@ -7,13 +7,22 @@ console.log("entered controller.")
   // var posOptions = {timeout: 10000, enableHighAccuracy: false};
   var ref = new Firebase("https://sensornet.firebaseio.com/");
   var location = ref.child("loc")
+  var userRef = location.child("test");
 
  var watchOptions = {
     timeout : 3000,
     maximumAge : 1000,
     enableHighAccuracy: false // may cause errors if true
   };
-
+$scope.enableOpenData = false;
+$scope.toggleOpenData =  function()
+{
+  $scope.enableOpenData = !$scope.enableOpenData;
+  var prefs = userRef.child("preferences");
+  var time = new Date().getTime();
+  var userTime = userRef.child(time);
+  userTime.set({openData:$scope.enableOpenData});
+}
 $ionicPlatform.ready(function() {
 
   function locService() {
@@ -31,14 +40,14 @@ $ionicPlatform.ready(function() {
       function(position) {
         var lat  = position.coords.latitude
         var lon = position.coords.longitude
-
-        location.set({
-                        test: { timestamp: new Date().getTime(),
-                                lat: lat,
-                                lon: lon
-                              }
+        var time = new Date().getTime();
+        var userTime = userRef.child(time);
+        userTime.set({
+                        lat: lat,
+                        lon: lon
+                        
         })
-        console.log("lat: [" + lat + " lon: [" + lon + "]")
+        console.log("lat: [" + lat + "] lon: [" + lon + "]")
         $scope.location={lat:lat, lon:lon};
     });
   }
