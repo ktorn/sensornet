@@ -1,39 +1,25 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $interval, $cordovaGeolocation) {
+.controller('DashCtrl', function($scope, $cordovaGeolocation) {
 
-  var posOptions = {timeout: 10000, enableHighAccuracy: false};
+  // var posOptions = {timeout: 10000, enableHighAccuracy: false};
   var ref = new Firebase("https://sensornet.firebaseio.com/");
   var location = ref.child("loc")
 
- $interval(function()
- {
- // var watchOptions = {
- //    timeout : 3000,
- //    enableHighAccuracy: false // may cause errors if true
- //  };
+ var watchOptions = {
+    timeout : 3000,
+    maximumAge : 1000,
+    enableHighAccuracy: false // may cause errors if true
+  };
 
- //  var watch = $cordovaGeolocation.watchPosition(watchOptions);
- //  watch.then(
- //    null,
- //    function(err) {
- //      // error
- //    },
- //    function(position) {
- //      var lat  = position.coords.latitude
- //      var lon = position.coords.longitude
+  var watch = $cordovaGeolocation.watchPosition(watchOptions);
 
- //      location.set({
- //                      test: { lat: lat,
- //                              lon: lon
- //                            }
- //      })
- //      $scope.location={lat:lat, lon:lon};
- //  });
- //  watch.clearWatch();
-$cordovaGeolocation
-    .getCurrentPosition(posOptions)
-    .then(function (position) {
+  watch.then(
+    null,
+    function(err) {
+      console.log("error: " + err)
+    },
+    function(position) {
       var lat  = position.coords.latitude
       var lon = position.coords.longitude
 
@@ -42,16 +28,9 @@ $cordovaGeolocation
                               lon: lon
                             }
       })
-            $scope.location={lat:lat, lon:lon};
-
-    
-    }, function(err) {
-      alert("error: " + JSON.stringify(err))
-    });
-  },1000 )
-
-// },1000)
- 
+      console.log("lat: [" + lat + " lon: [" + lon + "]")
+      $scope.location={lat:lat, lon:lon};
+  });
 
 })
 
