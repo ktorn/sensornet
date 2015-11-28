@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $cordovaGeolocation) {
+.controller('DashCtrl', function($scope, $ionicPlatform, $cordovaGeolocation) {
 
   // var posOptions = {timeout: 10000, enableHighAccuracy: false};
   var ref = new Firebase("https://sensornet.firebaseio.com/");
@@ -11,6 +11,8 @@ angular.module('starter.controllers', [])
     maximumAge : 1000,
     enableHighAccuracy: false // may cause errors if true
   };
+
+$ionicPlatform.ready(function() {
 
   var watch = $cordovaGeolocation.watchPosition(watchOptions);
 
@@ -31,6 +33,9 @@ angular.module('starter.controllers', [])
       console.log("lat: [" + lat + " lon: [" + lon + "]")
       $scope.location={lat:lat, lon:lon};
   });
+
+})
+
 
 })
 
